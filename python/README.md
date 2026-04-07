@@ -10,13 +10,13 @@
 ### macOS / Linux
 
 ```bash
-bash python/setup/setup.sh
+curl -LsSf https://raw.githubusercontent.com/antonysallas/open-skill-forge/main/python/setup/setup.sh | bash
 ```
 
 ### Windows
 
 ```powershell
-.\python\setup\setup.ps1
+powershell -ExecutionPolicy ByPass -c "irm https://raw.githubusercontent.com/antonysallas/open-skill-forge/main/python/setup/setup.ps1 | iex"
 ```
 
 The setup script will:
@@ -24,25 +24,21 @@ The setup script will:
 1. Install [uv](https://docs.astral.sh/uv/) (skipped if already installed)
 1. Install Python 3.12 via uv
 1. Install JupyterLab via uv
-
-Once complete, start JupyterLab with:
-
-```bash
-jupyter lab
-```
+1. Clone the repository to `~/open-skill-forge/`
+1. Launch JupyterLab in the notebooks directory
 
 ## Uninstall
 
 ### macOS / Linux (Uninstall)
 
 ```bash
-bash python/setup/remove.sh
+curl -LsSf https://raw.githubusercontent.com/antonysallas/open-skill-forge/main/python/setup/remove.sh | bash
 ```
 
 ### Windows (Uninstall)
 
 ```powershell
-.\python\setup\remove.ps1
+powershell -ExecutionPolicy ByPass -c "irm https://raw.githubusercontent.com/antonysallas/open-skill-forge/main/python/setup/remove.ps1 | iex"
 ```
 
 To skip the confirmation prompt (e.g. in CI), pass the force flag:

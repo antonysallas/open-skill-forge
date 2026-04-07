@@ -9,6 +9,10 @@ BLUE='\033[0;34m'
 NC='\033[0m'
 
 PYTHON_VERSION="3.12"
+REPO_URL="https://github.com/antonysallas/open-skill-forge.git"
+REPO_DIR="$HOME/open-skill-forge"
+NO_LAUNCH=false
+[[ "${1:-}" == "--no-launch" ]] && NO_LAUNCH=true
 
 info()  { echo -e "${BLUE}▶${NC} $1"; }
 ok()    { echo -e "${GREEN}✔${NC} $1"; }
@@ -42,7 +46,16 @@ info "Installing JupyterLab via uv..."
 uv tool install --force jupyterlab
 ok "JupyterLab installed"
 
-# ── 4. Verify ──
+# ── 4. Clone repository ──
+if [ -d "$REPO_DIR/.git" ]; then
+  ok "Repository already cloned at $REPO_DIR"
+else
+  info "Cloning repository to $REPO_DIR..."
+  git clone "$REPO_URL" "$REPO_DIR"
+  ok "Repository cloned"
+fi
+
+# ── 5. Verify ──
 echo ""
 echo "═══════════════════════════════════════════"
 echo "  Verification"
@@ -52,5 +65,13 @@ echo "  uv:         $(uv --version)"
 echo "  Python:     $(uv run --python ${PYTHON_VERSION} python --version)"
 echo "  JupyterLab: $(jupyter-lab --version 2>/dev/null || echo 'run: jupyter lab')"
 echo ""
-ok "Setup complete! Run 'jupyter lab' to start."
-echo ""
+
+# ── 6. Launch JupyterLab ──
+if [[ "$NO_LAUNCH" == true ]]; then
+  ok "Setup complete! Run 'jupyter lab' to start."
+else
+  ok "Setup complete! Launching JupyterLab..."
+  echo ""
+  cd "$REPO_DIR/python/notebooks"
+  jupyter lab
+fi

@@ -1,7 +1,13 @@
 # ─── open-skill-forge setup (Windows) ───
 
+param(
+    [switch]$NoLaunch
+)
+
 $ErrorActionPreference = "Stop"
 $PythonVersion = "3.12"
+$RepoUrl = "https://github.com/antonysallas/open-skill-forge.git"
+$RepoDir = "$env:USERPROFILE\open-skill-forge"
 
 function Write-Info  { param($msg) Write-Host "▶ $msg" -ForegroundColor Cyan }
 function Write-Ok    { param($msg) Write-Host "✔ $msg" -ForegroundColor Green }
@@ -37,7 +43,16 @@ Write-Info "Installing JupyterLab via uv..."
 uv tool install --force jupyterlab
 Write-Ok "JupyterLab installed"
 
-# ── 4. Verify ──
+# ── 4. Clone repository ──
+if (Test-Path "$RepoDir\.git") {
+    Write-Ok "Repository already cloned at $RepoDir"
+} else {
+    Write-Info "Cloning repository to $RepoDir..."
+    git clone $RepoUrl $RepoDir
+    Write-Ok "Repository cloned"
+}
+
+# ── 5. Verify ──
 Write-Host ""
 Write-Host "═══════════════════════════════════════════"
 Write-Host "  Verification"
@@ -52,5 +67,13 @@ try {
     Write-Host "  JupyterLab: run 'jupyter lab' to start"
 }
 Write-Host ""
-Write-Ok "Setup complete! Run 'jupyter lab' to start."
-Write-Host ""
+
+# ── 6. Launch JupyterLab ──
+if ($NoLaunch) {
+    Write-Ok "Setup complete! Run 'jupyter lab' to start."
+} else {
+    Write-Ok "Setup complete! Launching JupyterLab..."
+    Write-Host ""
+    Set-Location "$RepoDir\python\notebooks"
+    jupyter lab
+}
