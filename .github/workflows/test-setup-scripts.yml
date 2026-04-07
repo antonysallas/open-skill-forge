@@ -1,0 +1,119 @@
+name: Test Setup Scripts
+
+on:
+  push:
+    paths:
+      - "python/setup/**"
+      - ".github/workflows/test-setup-scripts.yml"
+  pull_request:
+    paths:
+      - "python/setup/**"
+      - ".github/workflows/test-setup-scripts.yml"
+  workflow_dispatch: # allow manual trigger
+
+jobs:
+  test-setup-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run setup
+        run: bash python/setup/setup.sh
+
+      - name: Verify tools are available
+        run: |
+          uv --version
+          uv run --python 3.12 python --version
+          jupyter-lab --version
+
+      - name: Run removal
+        run: |
+          echo "y" | bash python/setup/remove.sh
+
+      - name: Verify tools are removed
+        run: |
+          ! command -v uv 2>/dev/null
+          ! command -v jupyter-lab 2>/dev/null
+
+  test-setup-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run setup
+        run: bash python/setup/setup.sh
+
+      - name: Verify tools are available
+        run: |
+          uv --version
+          uv run --python 3.12 python --version
+          jupyter-lab --version
+
+      - name: Run removal
+        run: |
+          echo "y" | bash python/setup/remove.sh
+
+      - name: Verify tools are removed
+        run: |
+          ! command -v uv 2>/dev/null
+          ! command -v jupyter-lab 2>/dev/null
+
+  test-setup-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run setup
+        shell: pwsh
+        run: python/setup/setup.ps1
+
+      - name: Verify tools are available
+        shell: pwsh
+        run: |
+          uv --version
+          uv run --python 3.12 python --version
+          jupyter-lab --version
+
+      - name: Run removal
+        shell: pwsh
+        run: |
+          "y" | python/setup/remove.ps1
+
+      - name: Verify tools are removed
+        shell: pwsh
+        run: |
+          if (Get-Command uv -ErrorAction SilentlyContinue) { exit 1 }
+          if (Get-Command jupyter-lab -ErrorAction SilentlyContinue) { exit 1 }
+          Write-Host "Tools successfully removed"
+
+  test-idempotent-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run setup twice
+        run: |
+          bash python/setup/setup.sh
+          bash python/setup/setup.sh
+
+      - name: Verify tools still work
+        run: |
+          uv --version
+          jupyter-lab --version
+
+  test-idempotent-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run setup twice
+        shell: pwsh
+        run: |
+          & python/setup/setup.ps1
+          & python/setup/setup.ps1
+
+      - name: Verify tools still work
+        shell: pwsh
+        run: |
+          uv --version
+          jupyter-lab --version
