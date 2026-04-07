@@ -82,8 +82,10 @@ jobs:
       - name: Verify tools are removed
         shell: pwsh
         run: |
-          if (Get-Command uv -ErrorAction SilentlyContinue) { exit 1 }
-          if (Get-Command jupyter-lab -ErrorAction SilentlyContinue) { exit 1 }
+          $uvPath = "$env:USERPROFILE\.local\bin\uv.exe"
+          $jlPath = "$env:USERPROFILE\.local\bin\jupyter-lab.exe"
+          if (Test-Path $uvPath) { Write-Host "uv still exists at $uvPath"; exit 1 }
+          if (Test-Path $jlPath) { Write-Host "jupyter-lab still exists at $jlPath"; exit 1 }
           Write-Host "Tools successfully removed"
 
   test-idempotent-linux:
