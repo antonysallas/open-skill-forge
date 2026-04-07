@@ -28,7 +28,7 @@ jobs:
 
       - name: Run removal
         run: |
-          echo "y" | bash python/setup/remove.sh
+          bash python/setup/remove.sh --force
 
       - name: Verify tools are removed
         run: |
@@ -51,7 +51,7 @@ jobs:
 
       - name: Run removal
         run: |
-          echo "y" | bash python/setup/remove.sh
+          bash python/setup/remove.sh --force
 
       - name: Verify tools are removed
         run: |
@@ -77,7 +77,7 @@ jobs:
       - name: Run removal
         shell: pwsh
         run: |
-          "y" | python/setup/remove.ps1
+          python/setup/remove.ps1 -Force
 
       - name: Verify tools are removed
         shell: pwsh

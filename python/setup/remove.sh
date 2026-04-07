@@ -3,6 +3,9 @@ set -euo pipefail
 
 # ─── open-skill-forge removal (macOS / Linux) ───
 
+FORCE=false
+[[ "${1:-}" == "--force" ]] && FORCE=true
+
 GREEN='\033[0;32m'
 RED='\033[0;31m'
 BLUE='\033[0;34m'
@@ -20,8 +23,10 @@ echo "════════════════════════�
 echo ""
 echo "This will remove JupyterLab, uv-managed Python, and uv."
 echo ""
-read -rp "Continue? (y/N) " confirm
-[[ "$confirm" =~ ^[Yy]$ ]] || { echo "Aborted."; exit 0; }
+if [[ "$FORCE" != true ]]; then
+  read -rp "Continue? (y/N) " confirm
+  [[ "$confirm" =~ ^[Yy]$ ]] || { echo "Aborted."; exit 0; }
+fi
 echo ""
 
 # ── 1. Remove JupyterLab ──

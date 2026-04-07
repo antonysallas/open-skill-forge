@@ -1,5 +1,9 @@
 # ─── open-skill-forge removal (Windows) ───
 
+param(
+    [switch]$Force
+)
+
 $ErrorActionPreference = "Stop"
 
 function Write-Info  { param($msg) Write-Host "▶ $msg" -ForegroundColor Cyan }
@@ -14,10 +18,12 @@ Write-Host ""
 Write-Host "This will remove JupyterLab, uv-managed Python, and uv."
 Write-Host ""
 
-$confirm = Read-Host "Continue? (y/N)"
-if ($confirm -notin @("y", "Y")) {
-    Write-Host "Aborted."
-    exit 0
+if (-not $Force) {
+    $confirm = Read-Host "Continue? (y/N)"
+    if ($confirm -notin @("y", "Y")) {
+        Write-Host "Aborted."
+        exit 0
+    }
 }
 Write-Host ""
 
