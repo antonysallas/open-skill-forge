@@ -60,12 +60,18 @@ else
   ok "Virtual environment created"
 fi
 
-# ── 5. Install JupyterLab in venv ──
-info "Installing JupyterLab in virtual environment..."
-uv pip install --python "$VENV_DIR/bin/python" jupyterlab
-ok "JupyterLab installed"
+# ── 5. Install JupyterLab and nbstripout in venv ──
+info "Installing JupyterLab and nbstripout in virtual environment..."
+uv pip install --python "$VENV_DIR/bin/python" jupyterlab nbstripout
+ok "JupyterLab and nbstripout installed"
 
-# ── 6. Verify ──
+# ── 6. Configure nbstripout ──
+info "Configuring nbstripout to auto-strip notebook outputs..."
+cd "$REPO_DIR"
+"$VENV_DIR/bin/nbstripout" --install
+ok "nbstripout configured"
+
+# ── 7. Verify ──
 echo ""
 echo "═══════════════════════════════════════════"
 echo "  Verification"
@@ -77,7 +83,7 @@ echo "  Python:     $($VENV_PYTHON --version)"
 echo "  JupyterLab: $($VENV_PYTHON -m jupyterlab --version 2>/dev/null || echo 'installed')"
 echo ""
 
-# ── 7. Done ──
+# ── 8. Done ──
 ok "Setup complete!"
 echo ""
 echo "To start JupyterLab, run:"

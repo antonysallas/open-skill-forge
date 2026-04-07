@@ -54,12 +54,19 @@ if (Test-Path $VenvDir) {
     Write-Ok "Virtual environment created"
 }
 
-# ── 5. Install JupyterLab in venv ──
-Write-Info "Installing JupyterLab in virtual environment..."
-uv pip install --python "$VenvDir\Scripts\python.exe" jupyterlab
-Write-Ok "JupyterLab installed"
+# ── 5. Install JupyterLab and nbstripout in venv ──
+Write-Info "Installing JupyterLab and nbstripout in virtual environment..."
+uv pip install --python "$VenvDir\Scripts\python.exe" jupyterlab nbstripout
+Write-Ok "JupyterLab and nbstripout installed"
 
-# ── 6. Verify ──
+# ── 6. Configure nbstripout ──
+Write-Info "Configuring nbstripout to auto-strip notebook outputs..."
+Push-Location $RepoDir
+& "$VenvDir\Scripts\nbstripout.exe" --install
+Pop-Location
+Write-Ok "nbstripout configured"
+
+# ── 7. Verify ──
 Write-Host ""
 Write-Host "═══════════════════════════════════════════"
 Write-Host "  Verification"
@@ -76,7 +83,7 @@ try {
 }
 Write-Host ""
 
-# ── 7. Done ──
+# ── 8. Done ──
 Write-Ok "Setup complete!"
 Write-Host ""
 Write-Host "To start JupyterLab, run:"

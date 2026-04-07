@@ -25,7 +25,8 @@ The setup script will:
 1. Install Python 3.12 via uv
 1. Clone the repository to `~/projects/open-skill-forge/`
 1. Create a virtual environment in the project directory
-1. Install JupyterLab in the virtual environment
+1. Install JupyterLab and nbstripout in the virtual environment
+1. Configure nbstripout to auto-strip notebook outputs on commit
 
 Then follow the printed instructions to start JupyterLab.
 
@@ -61,6 +62,16 @@ The removal script will:
 1. Remove all uv-managed Python installations
 1. Remove uv and its data/cache directories
 
+## Pulling Updates
+
+`nbstripout` is configured automatically by the setup script,
+so notebook outputs won't cause git conflicts. To pull updates:
+
+```bash
+cd ~/projects/open-skill-forge
+git pull
+```
+
 ## Manual Install (Fallback)
 
 If the setup script doesn't work, run these commands directly.
@@ -83,9 +94,13 @@ git clone https://github.com/antonysallas/open-skill-forge.git \
 # 4. Create venv and install JupyterLab
 uv venv --python 3.12 ~/projects/open-skill-forge/.venv
 source ~/projects/open-skill-forge/.venv/bin/activate
-uv pip install jupyterlab
+uv pip install jupyterlab nbstripout
 
-# 5. Launch
+# 5. Configure nbstripout
+cd ~/projects/open-skill-forge
+nbstripout --install
+
+# 6. Launch
 cd ~/projects/open-skill-forge/python/notebooks
 jupyter lab
 ```
@@ -107,9 +122,13 @@ git clone https://github.com/antonysallas/open-skill-forge.git `
 # 4. Create venv and install JupyterLab
 uv venv --python 3.12 "$env:USERPROFILE\projects\open-skill-forge\.venv"
 & "$env:USERPROFILE\projects\open-skill-forge\.venv\Scripts\Activate.ps1"
-uv pip install jupyterlab
+uv pip install jupyterlab nbstripout
 
-# 5. Launch
+# 5. Configure nbstripout
+cd "$env:USERPROFILE\projects\open-skill-forge"
+nbstripout --install
+
+# 6. Launch
 cd "$env:USERPROFILE\projects\open-skill-forge\python\notebooks"
 jupyter lab
 ```
