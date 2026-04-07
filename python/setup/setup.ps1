@@ -1,9 +1,5 @@
 # ─── open-skill-forge setup (Windows) ───
 
-param(
-    [switch]$NoLaunch
-)
-
 $ErrorActionPreference = "Stop"
 $PythonVersion = "3.12"
 $RepoUrl = "https://github.com/antonysallas/open-skill-forge.git"
@@ -69,12 +65,10 @@ try {
 }
 Write-Host ""
 
-# ── 6. Launch JupyterLab ──
-if ($NoLaunch) {
-    Write-Ok "Setup complete! Run 'jupyter lab' to start."
-} else {
-    Write-Ok "Setup complete! Launching JupyterLab..."
-    Write-Host ""
-    Set-Location "$RepoDir\python\notebooks"
-    jupyter lab
-}
+# ── 6. Done ──
+Write-Ok "Setup complete!"
+Write-Host ""
+Write-Host "To start JupyterLab, run:"
+Write-Host ""
+Write-Host "  cd $RepoDir\python\notebooks; jupyter lab"
+Write-Host ""

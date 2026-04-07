@@ -11,9 +11,6 @@ NC='\033[0m'
 PYTHON_VERSION="3.12"
 REPO_URL="https://github.com/antonysallas/open-skill-forge.git"
 REPO_DIR="$HOME/projects/open-skill-forge"
-NO_LAUNCH=false
-[[ "${1:-}" == "--no-launch" ]] && NO_LAUNCH=true
-
 info()  { echo -e "${BLUE}▶${NC} $1"; }
 ok()    { echo -e "${GREEN}✔${NC} $1"; }
 fail()  { echo -e "${RED}✖${NC} $1"; exit 1; }
@@ -68,12 +65,10 @@ echo "  Python:     $(uv run --python ${PYTHON_VERSION} python --version)"
 echo "  JupyterLab: $(jupyter-lab --version 2>/dev/null || echo 'run: jupyter lab')"
 echo ""
 
-# ── 6. Launch JupyterLab ──
-if [[ "$NO_LAUNCH" == true ]]; then
-  ok "Setup complete! Run 'jupyter lab' to start."
-else
-  ok "Setup complete! Launching JupyterLab..."
-  echo ""
-  cd "$REPO_DIR/python/notebooks"
-  exec jupyter lab </dev/tty
-fi
+# ── 6. Done ──
+ok "Setup complete!"
+echo ""
+echo "To start JupyterLab, run:"
+echo ""
+echo "  cd $REPO_DIR/python/notebooks && jupyter lab"
+echo ""
