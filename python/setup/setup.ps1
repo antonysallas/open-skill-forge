@@ -68,7 +68,7 @@ Write-Host ""
 # ── 6. Done ──
 Write-Ok "Setup complete!"
 Write-Host ""
-Write-Host "To start JupyterLab, run:"
+Write-Host "Open a new terminal, then run:"
 Write-Host ""
 Write-Host "  cd $RepoDir\python\notebooks; jupyter lab"
 Write-Host ""

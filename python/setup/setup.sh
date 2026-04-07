@@ -68,7 +68,7 @@ echo ""
 # ── 6. Done ──
 ok "Setup complete!"
 echo ""
-echo "To start JupyterLab, run:"
+echo "Open a new terminal, then run:"
 echo ""
 echo "  cd $REPO_DIR/python/notebooks && jupyter lab"
 echo ""
