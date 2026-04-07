@@ -51,7 +51,7 @@ if [ -d "$REPO_DIR/.git" ]; then
   ok "Repository already cloned at $REPO_DIR"
 else
   info "Cloning repository to $REPO_DIR..."
-  git clone "$REPO_URL" "$REPO_DIR"
+  git clone "$REPO_URL" "$REPO_DIR" </dev/null
   ok "Repository cloned"
 fi
 
@@ -73,5 +73,5 @@ else
   ok "Setup complete! Launching JupyterLab..."
   echo ""
   cd "$REPO_DIR/python/notebooks"
-  jupyter lab
+  exec jupyter lab </dev/tty
 fi
