@@ -49,19 +49,7 @@ if ($uvCmd) {
 # ── 3. Remove uv ──
 Write-Info "Removing uv..."
 
-$uvPaths = @(
-    "$env:USERPROFILE\.local\bin\uv.exe",
-    "$env:USERPROFILE\.local\bin\uvx.exe"
-)
-if ($env:CARGO_HOME) {
-    $uvPaths += "$env:CARGO_HOME\bin\uv.exe"
-    $uvPaths += "$env:CARGO_HOME\bin\uvx.exe"
-}
-
-foreach ($p in $uvPaths) {
-    if ($p -and (Test-Path $p)) { Remove-Item $p -Force }
-}
-
+# Remove data/cache dirs first
 $uvDataDirs = @(
     "$env:USERPROFILE\.local\share\uv",
     "$env:LOCALAPPDATA\uv"
@@ -69,6 +57,22 @@ $uvDataDirs = @(
 
 foreach ($d in $uvDataDirs) {
     if (Test-Path $d) { Remove-Item $d -Recurse -Force }
+}
+
+# Remove binaries (uv, uvx, and any tool shims like jupyter-lab)
+$localBin = "$env:USERPROFILE\.local\bin"
+if (Test-Path $localBin) {
+    Remove-Item $localBin -Recurse -Force
+}
+
+if ($env:CARGO_HOME) {
+    $cargoPaths = @(
+        "$env:CARGO_HOME\bin\uv.exe",
+        "$env:CARGO_HOME\bin\uvx.exe"
+    )
+    foreach ($p in $cargoPaths) {
+        if (Test-Path $p) { Remove-Item $p -Force }
+    }
 }
 
 Write-Ok "uv removed"
