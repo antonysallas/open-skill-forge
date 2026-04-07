@@ -7,7 +7,7 @@ param(
 $ErrorActionPreference = "Stop"
 $PythonVersion = "3.12"
 $RepoUrl = "https://github.com/antonysallas/open-skill-forge.git"
-$RepoDir = "$env:USERPROFILE\open-skill-forge"
+$RepoDir = "$env:USERPROFILE\projects\open-skill-forge"
 
 function Write-Info  { param($msg) Write-Host "▶ $msg" -ForegroundColor Cyan }
 function Write-Ok    { param($msg) Write-Host "✔ $msg" -ForegroundColor Green }
@@ -47,6 +47,7 @@ Write-Ok "JupyterLab installed"
 if (Test-Path "$RepoDir\.git") {
     Write-Ok "Repository already cloned at $RepoDir"
 } else {
+    New-Item -ItemType Directory -Path (Split-Path $RepoDir) -Force | Out-Null
     Write-Info "Cloning repository to $RepoDir..."
     git clone $RepoUrl $RepoDir
     Write-Ok "Repository cloned"

@@ -24,23 +24,23 @@ The setup script will:
 1. Install [uv](https://docs.astral.sh/uv/) (skipped if already installed)
 1. Install Python 3.12 via uv
 1. Install JupyterLab via uv
-1. Clone the repository to `~/open-skill-forge/`
+1. Clone the repository to `~/projects/open-skill-forge/`
 1. Launch JupyterLab in the notebooks directory
 
 ## Uninstall
 
-From the cloned repository (`~/open-skill-forge/`):
+From the cloned repository (`~/projects/open-skill-forge/`):
 
 ### macOS / Linux (Uninstall)
 
 ```bash
-bash ~/open-skill-forge/python/setup/remove.sh
+bash ~/projects/open-skill-forge/python/setup/remove.sh
 ```
 
 ### Windows (Uninstall)
 
 ```powershell
-& "$env:USERPROFILE\open-skill-forge\python\setup\remove.ps1"
+& "$env:USERPROFILE\projects\open-skill-forge\python\setup\remove.ps1"
 ```
 
 To skip the confirmation prompt (e.g. in CI):

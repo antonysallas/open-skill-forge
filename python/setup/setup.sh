@@ -10,7 +10,7 @@ NC='\033[0m'
 
 PYTHON_VERSION="3.12"
 REPO_URL="https://github.com/antonysallas/open-skill-forge.git"
-REPO_DIR="$HOME/open-skill-forge"
+REPO_DIR="$HOME/projects/open-skill-forge"
 NO_LAUNCH=false
 [[ "${1:-}" == "--no-launch" ]] && NO_LAUNCH=true
 
@@ -24,14 +24,15 @@ echo "  open-skill-forge – Environment Setup"
 echo "═══════════════════════════════════════════"
 echo ""
 
+# Ensure ~/.local/bin is in PATH (uv tools install here)
+export PATH="$HOME/.local/bin:$PATH"
+
 # ── 1. Install uv ──
 if command -v uv &>/dev/null; then
   ok "uv already installed ($(uv --version))"
 else
   info "Installing uv..."
   curl -LsSf https://astral.sh/uv/install.sh | sh
-  # Source the env so uv is available in this session
-  export PATH="$HOME/.local/bin:$PATH"
   command -v uv &>/dev/null || fail "uv installation failed"
   ok "uv installed ($(uv --version))"
 fi
@@ -50,6 +51,7 @@ ok "JupyterLab installed"
 if [ -d "$REPO_DIR/.git" ]; then
   ok "Repository already cloned at $REPO_DIR"
 else
+  mkdir -p "$(dirname "$REPO_DIR")"
   info "Cloning repository to $REPO_DIR..."
   git clone "$REPO_URL" "$REPO_DIR" </dev/null
   ok "Repository cloned"
