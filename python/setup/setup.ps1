@@ -4,6 +4,7 @@ $ErrorActionPreference = "Stop"
 $PythonVersion = "3.12"
 $RepoUrl = "https://github.com/antonysallas/open-skill-forge.git"
 $RepoDir = "$env:USERPROFILE\projects\open-skill-forge"
+$VenvDir = "$RepoDir\.venv"
 
 function Write-Info  { param($msg) Write-Host "▶ $msg" -ForegroundColor Cyan }
 function Write-Ok    { param($msg) Write-Host "✔ $msg" -ForegroundColor Green }
@@ -34,12 +35,7 @@ Write-Info "Installing Python $PythonVersion via uv..."
 uv python install $PythonVersion
 Write-Ok "Python $PythonVersion installed"
 
-# ── 3. Install JupyterLab ──
-Write-Info "Installing JupyterLab via uv..."
-uv tool install --force jupyterlab
-Write-Ok "JupyterLab installed"
-
-# ── 4. Clone repository ──
+# ── 3. Clone repository ──
 if (Test-Path "$RepoDir\.git") {
     Write-Ok "Repository already cloned at $RepoDir"
 } else {
@@ -49,26 +45,43 @@ if (Test-Path "$RepoDir\.git") {
     Write-Ok "Repository cloned"
 }
 
-# ── 5. Verify ──
+# ── 4. Create virtual environment ──
+if (Test-Path $VenvDir) {
+    Write-Ok "Virtual environment already exists at $VenvDir"
+} else {
+    Write-Info "Creating virtual environment..."
+    uv venv --python $PythonVersion $VenvDir
+    Write-Ok "Virtual environment created"
+}
+
+# ── 5. Install JupyterLab in venv ──
+Write-Info "Installing JupyterLab in virtual environment..."
+uv pip install --python "$VenvDir\Scripts\python.exe" jupyterlab
+Write-Ok "JupyterLab installed"
+
+# ── 6. Verify ──
 Write-Host ""
 Write-Host "═══════════════════════════════════════════"
 Write-Host "  Verification"
 Write-Host "═══════════════════════════════════════════"
 Write-Host ""
 Write-Host "  uv:         $(uv --version)"
-Write-Host "  Python:     $(uv run --python $PythonVersion python --version)"
+$VenvPython = "$VenvDir\Scripts\python.exe"
+Write-Host "  Python:     $(& $VenvPython --version)"
 try {
-    $jlVersion = jupyter-lab --version 2>$null
+    $jlVersion = & $VenvPython -m jupyterlab --version 2>$null
     Write-Host "  JupyterLab: $jlVersion"
 } catch {
-    Write-Host "  JupyterLab: run 'jupyter lab' to start"
+    Write-Host "  JupyterLab: installed"
 }
 Write-Host ""
 
-# ── 6. Done ──
+# ── 7. Done ──
 Write-Ok "Setup complete!"
 Write-Host ""
-Write-Host "Open a new terminal, then run:"
+Write-Host "To start JupyterLab, run:"
 Write-Host ""
-Write-Host "  cd $RepoDir\python\notebooks; jupyter lab"
+Write-Host "  cd $RepoDir\python\notebooks"
+Write-Host "  $VenvDir\Scripts\Activate.ps1"
+Write-Host "  jupyter lab"
 Write-Host ""

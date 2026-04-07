@@ -23,9 +23,11 @@ The setup script will:
 
 1. Install [uv](https://docs.astral.sh/uv/) (skipped if already installed)
 1. Install Python 3.12 via uv
-1. Install JupyterLab via uv
 1. Clone the repository to `~/projects/open-skill-forge/`
-1. Launch JupyterLab in the notebooks directory
+1. Create a virtual environment in the project directory
+1. Install JupyterLab in the virtual environment
+
+Then follow the printed instructions to start JupyterLab.
 
 ## Uninstall
 
@@ -55,7 +57,7 @@ bash python/setup/remove.sh --force
 
 The removal script will:
 
-1. Uninstall JupyterLab
+1. Remove the cloned repository and virtual environment
 1. Remove all uv-managed Python installations
 1. Remove uv and its data/cache directories
 

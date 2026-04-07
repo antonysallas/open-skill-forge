@@ -15,7 +15,10 @@ Write-Host "══════════════════════�
 Write-Host "  open-skill-forge – Environment Removal"
 Write-Host "═══════════════════════════════════════════"
 Write-Host ""
-Write-Host "This will remove JupyterLab, uv-managed Python, and uv."
+$RepoDir = "$env:USERPROFILE\projects\open-skill-forge"
+
+Write-Host "This will remove the virtual environment, cloned repository,"
+Write-Host "uv-managed Python, and uv."
 Write-Host ""
 
 if (-not $Force) {
@@ -27,21 +30,17 @@ if (-not $Force) {
 }
 Write-Host ""
 
-# ── 1. Remove JupyterLab ──
-$uvCmd = Get-Command uv -ErrorAction SilentlyContinue
-if ($uvCmd) {
-    Write-Info "Removing JupyterLab..."
-    try {
-        uv tool uninstall jupyterlab 2>$null
-        Write-Ok "JupyterLab removed"
-    } catch {
-        Write-Warn "JupyterLab was not installed"
-    }
+# ── 1. Remove cloned repository (includes venv) ──
+if (Test-Path $RepoDir) {
+    Write-Info "Removing $RepoDir..."
+    Remove-Item $RepoDir -Recurse -Force
+    Write-Ok "Repository and virtual environment removed"
 } else {
-    Write-Warn "uv not found — skipping JupyterLab removal"
+    Write-Warn "Repository not found at $RepoDir"
 }
 
 # ── 2. Remove uv-managed Python installations ──
+$uvCmd = Get-Command uv -ErrorAction SilentlyContinue
 if ($uvCmd) {
     Write-Info "Removing uv-managed Python installations..."
     try {

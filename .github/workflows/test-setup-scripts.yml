@@ -11,6 +11,10 @@ on:
       - ".github/workflows/test-setup-scripts.yml"
   workflow_dispatch: # allow manual trigger
 
+env:
+  REPO_DIR_LINUX: ~/projects/open-skill-forge
+  VENV_DIR_LINUX: ~/projects/open-skill-forge/.venv
+
 jobs:
   test-setup-linux:
     runs-on: ubuntu-latest
@@ -23,8 +27,8 @@ jobs:
       - name: Verify tools are available
         run: |
           uv --version
-          uv run --python 3.12 python --version
-          jupyter-lab --version
+          ${{ env.VENV_DIR_LINUX }}/bin/python --version
+          ${{ env.VENV_DIR_LINUX }}/bin/jupyter-lab --version
 
       - name: Run removal
         run: |
@@ -33,7 +37,7 @@ jobs:
       - name: Verify tools are removed
         run: |
           ! command -v uv 2>/dev/null
-          ! command -v jupyter-lab 2>/dev/null
+          test ! -d ${{ env.VENV_DIR_LINUX }}
 
   test-setup-macos:
     runs-on: macos-latest
@@ -46,8 +50,8 @@ jobs:
       - name: Verify tools are available
         run: |
           uv --version
-          uv run --python 3.12 python --version
-          jupyter-lab --version
+          ${{ env.VENV_DIR_LINUX }}/bin/python --version
+          ${{ env.VENV_DIR_LINUX }}/bin/jupyter-lab --version
 
       - name: Run removal
         run: |
@@ -56,7 +60,7 @@ jobs:
       - name: Verify tools are removed
         run: |
           ! command -v uv 2>/dev/null
-          ! command -v jupyter-lab 2>/dev/null
+          test ! -d ${{ env.VENV_DIR_LINUX }}
 
   test-setup-windows:
     runs-on: windows-latest
@@ -71,8 +75,9 @@ jobs:
         shell: pwsh
         run: |
           uv --version
-          uv run --python 3.12 python --version
-          jupyter-lab --version
+          $venv = "$env:USERPROFILE\projects\open-skill-forge\.venv"
+          & "$venv\Scripts\python.exe" --version
+          & "$venv\Scripts\jupyter-lab.exe" --version
 
       - name: Run removal
         shell: pwsh
@@ -83,7 +88,9 @@ jobs:
         shell: pwsh
         run: |
           $localBin = "$env:USERPROFILE\.local\bin"
-          if (Test-Path $localBin) { Write-Host ".local/bin still exists at $localBin"; exit 1 }
+          $venv = "$env:USERPROFILE\projects\open-skill-forge\.venv"
+          if (Test-Path $localBin) { Write-Host ".local/bin still exists"; exit 1 }
+          if (Test-Path $venv) { Write-Host ".venv still exists"; exit 1 }
           Write-Host "Tools successfully removed"
 
   test-idempotent-linux:
@@ -99,7 +106,7 @@ jobs:
       - name: Verify tools still work
         run: |
           uv --version
-          jupyter-lab --version
+          ${{ env.VENV_DIR_LINUX }}/bin/jupyter-lab --version
 
   test-idempotent-windows:
     runs-on: windows-latest
@@ -116,4 +123,5 @@ jobs:
         shell: pwsh
         run: |
           uv --version
-          jupyter-lab --version
+          $venv = "$env:USERPROFILE\projects\open-skill-forge\.venv"
+          & "$venv\Scripts\jupyter-lab.exe" --version

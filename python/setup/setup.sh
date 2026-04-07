@@ -11,6 +11,8 @@ NC='\033[0m'
 PYTHON_VERSION="3.12"
 REPO_URL="https://github.com/antonysallas/open-skill-forge.git"
 REPO_DIR="$HOME/projects/open-skill-forge"
+VENV_DIR="$REPO_DIR/.venv"
+
 info()  { echo -e "${BLUE}▶${NC} $1"; }
 ok()    { echo -e "${GREEN}✔${NC} $1"; }
 fail()  { echo -e "${RED}✖${NC} $1"; exit 1; }
@@ -21,7 +23,7 @@ echo "  open-skill-forge – Environment Setup"
 echo "═══════════════════════════════════════════"
 echo ""
 
-# Ensure ~/.local/bin is in PATH (uv tools install here)
+# Ensure ~/.local/bin is in PATH (uv installs here)
 export PATH="$HOME/.local/bin:$PATH"
 
 # ── 1. Install uv ──
@@ -39,12 +41,7 @@ info "Installing Python ${PYTHON_VERSION} via uv..."
 uv python install "$PYTHON_VERSION"
 ok "Python ${PYTHON_VERSION} installed"
 
-# ── 3. Install JupyterLab ──
-info "Installing JupyterLab via uv..."
-uv tool install --force jupyterlab
-ok "JupyterLab installed"
-
-# ── 4. Clone repository ──
+# ── 3. Clone repository ──
 if [ -d "$REPO_DIR/.git" ]; then
   ok "Repository already cloned at $REPO_DIR"
 else
@@ -54,21 +51,38 @@ else
   ok "Repository cloned"
 fi
 
-# ── 5. Verify ──
+# ── 4. Create virtual environment ──
+if [ -d "$VENV_DIR" ]; then
+  ok "Virtual environment already exists at $VENV_DIR"
+else
+  info "Creating virtual environment..."
+  uv venv --python "$PYTHON_VERSION" "$VENV_DIR"
+  ok "Virtual environment created"
+fi
+
+# ── 5. Install JupyterLab in venv ──
+info "Installing JupyterLab in virtual environment..."
+uv pip install --python "$VENV_DIR/bin/python" jupyterlab
+ok "JupyterLab installed"
+
+# ── 6. Verify ──
 echo ""
 echo "═══════════════════════════════════════════"
 echo "  Verification"
 echo "═══════════════════════════════════════════"
 echo ""
 echo "  uv:         $(uv --version)"
-echo "  Python:     $(uv run --python ${PYTHON_VERSION} python --version)"
-echo "  JupyterLab: $(jupyter-lab --version 2>/dev/null || echo 'run: jupyter lab')"
+VENV_PYTHON="$VENV_DIR/bin/python"
+echo "  Python:     $($VENV_PYTHON --version)"
+echo "  JupyterLab: $($VENV_PYTHON -m jupyterlab --version 2>/dev/null || echo 'installed')"
 echo ""
 
-# ── 6. Done ──
+# ── 7. Done ──
 ok "Setup complete!"
 echo ""
-echo "Open a new terminal, then run:"
+echo "To start JupyterLab, run:"
 echo ""
-echo "  cd $REPO_DIR/python/notebooks && jupyter lab"
+echo "  cd $REPO_DIR/python/notebooks"
+echo "  source $VENV_DIR/bin/activate"
+echo "  jupyter lab"
 echo ""

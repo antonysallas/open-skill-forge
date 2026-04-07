@@ -21,7 +21,10 @@ echo "════════════════════════�
 echo "  open-skill-forge – Environment Removal"
 echo "═══════════════════════════════════════════"
 echo ""
-echo "This will remove JupyterLab, uv-managed Python, and uv."
+REPO_DIR="$HOME/projects/open-skill-forge"
+
+echo "This will remove the virtual environment, cloned repository,"
+echo "uv-managed Python, and uv."
 echo ""
 if [[ "$FORCE" != true ]]; then
   read -rp "Continue? (y/N) " confirm
@@ -29,12 +32,13 @@ if [[ "$FORCE" != true ]]; then
 fi
 echo ""
 
-# ── 1. Remove JupyterLab ──
-if command -v uv &>/dev/null; then
-  info "Removing JupyterLab..."
-  uv tool uninstall jupyterlab 2>/dev/null && ok "JupyterLab removed" || warn "JupyterLab was not installed"
+# ── 1. Remove cloned repository (includes venv) ──
+if [ -d "$REPO_DIR" ]; then
+  info "Removing $REPO_DIR..."
+  rm -rf "$REPO_DIR"
+  ok "Repository and virtual environment removed"
 else
-  warn "uv not found — skipping JupyterLab removal"
+  warn "Repository not found at $REPO_DIR"
 fi
 
 # ── 2. Remove uv-managed Python installations ──
