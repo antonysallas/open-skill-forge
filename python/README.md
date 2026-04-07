@@ -2,8 +2,8 @@
 
 ## Prerequisites
 
-- **macOS/Linux:** `curl` and a POSIX shell
-- **Windows:** PowerShell 5.1+
+- **macOS/Linux:** `curl`, `git`, and a POSIX shell
+- **Windows:** PowerShell 5.1+ and `git`
 
 ## Install
 
@@ -29,19 +29,21 @@ The setup script will:
 
 ## Uninstall
 
+From the cloned repository (`~/open-skill-forge/`):
+
 ### macOS / Linux (Uninstall)
 
 ```bash
-curl -LsSf https://raw.githubusercontent.com/antonysallas/open-skill-forge/main/python/setup/remove.sh | bash
+bash ~/open-skill-forge/python/setup/remove.sh
 ```
 
 ### Windows (Uninstall)
 
 ```powershell
-powershell -ExecutionPolicy ByPass -c "irm https://raw.githubusercontent.com/antonysallas/open-skill-forge/main/python/setup/remove.ps1 | iex"
+& "$env:USERPROFILE\open-skill-forge\python\setup\remove.ps1"
 ```
 
-To skip the confirmation prompt (e.g. in CI), pass the force flag:
+To skip the confirmation prompt (e.g. in CI):
 
 ```bash
 bash python/setup/remove.sh --force
