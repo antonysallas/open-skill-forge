@@ -55,6 +55,10 @@ docs/_build/
 # Jupyter Notebook
 .ipynb_checkpoints/
 
+# Notebook sample data and outputs
+python/notebooks/sample_data/*.json
+python/notebooks/outputs/
+
 # IPython
 profile_default/
 ipython_config.py

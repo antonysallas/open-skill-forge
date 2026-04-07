@@ -5,7 +5,7 @@
 - **macOS/Linux:** `curl`, `git`, and a POSIX shell
 - **Windows:** PowerShell 5.1+ and `git`
 
-## Install
+## One Script Install (Recommended)
 
 ### macOS / Linux
 
